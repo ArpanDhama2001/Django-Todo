@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block task_content %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="task_title" class="form-label">Task:</label>
+        <input id="task_title" type="text" name='task' class="form-control mb-3" placeholder={{task.task}} value="{{task.task}}" />
+        <label for="task_description" class="form-label">Description:</label>
+        <input id="task_description" type="text" name='description' class="form-control mb-3"
+            {% if task.description != '' %}
+            placeholder={{task.description}}
+            value="{{task.description}}" 
+            {% endif %}
+         />
+        <input type="hidden" name='isCompleted' value={{task.isCompleted}} />
+        <div type='submit' class="d-md-flex justify-content-center">
+            <button class="btn btn-primary btn-lg">Update Task</button>
+        </div>
+    </form>
+
+{% endblock task_content%}

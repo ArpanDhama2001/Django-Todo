@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Todo Details{% endblock %}
+
+{% block task_content%}
+
+<div class="card">
+  <div class="card-body">
+    <h1> {{task.task}} </h1>
+{% if task.description != ""%}
+    <h5>{{task.description}}</h5>
+{% else %}
+    <h5> No description </h5>
+{% endif %}
+  </div>
+</div>
+
+
+
+
+{%endblock task_content%}
