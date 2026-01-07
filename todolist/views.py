@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Task
 from .forms import TaskForm
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create your views here.
 def homepage(request):
@@ -16,6 +17,10 @@ def homepage(request):
             form = TaskForm()
 
     all_tasks = Task.objects.all()
+    paginator = Paginator(all_tasks, 5)
+    page = request.GET.get('page')
+    all_tasks = paginator.get_page(page)
+
     context = {
         'all_tasks': all_tasks,
     }
@@ -33,7 +38,8 @@ def delete_task(request, task_id):
     if task:
         task.delete()
         messages.success(request, f"Task - {task.task} deleted!")
-        return redirect("/")
+        page = request.GET.get('page', '1')
+        return redirect(f"/?page={page}")
     messages.error(request, "Task not found to delete")
 
 def edit_task(request, task_id):
@@ -53,11 +59,13 @@ def mark_incomplete(request, task_id):
     task.isCompleted = False
     messages.success(request, "Task marked incomplete!")
     task.save()
-    return redirect("homepage")
+    page = request.GET.get('page', '1')
+    return redirect(f"/?page={page}")
 
 def mark_complete(request, task_id):
     task = Task.objects.get(id = task_id)
     task.isCompleted = True
     messages.success(request, "Task marked complete!")
     task.save()
-    return redirect("homepage")
+    page = request.GET.get('page', '1')
+    return redirect(f"/?page={page}")
