@@ -22,20 +22,18 @@
         </form>
     </div>
 
-    <table class="table">
+    <table class="table table-hover">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Task</th>
-      <th scope="col">Status</th>
-      <th scope="col">Edit</th>
-      <th scope="col">Delete</th>
+      <th scope="col" style="width: 50%;">Task</th>
+      <th scope="col" style="width: 25%;">Status</th>
+      <th scope="col" style="width: 12.5%;">Edit</th>
+      <th scope="col" style="width: 12.5%;">Delete</th>
     </tr>
   </thead>
   <tbody>
     {% for task in all_tasks %}
-    <tr class= {% if task.isCompleted %}"table-success"{% endif %}>
-        <th scope="row">{{ forloop.counter }}</th>
+    <tr {% if task.isCompleted %}class="table-success"{% endif %}>
         <td><a href="{%url 'todo_details' task.id%}">{{task.task}}</a></td>
         <td>
           {% if task.isCompleted %}
@@ -50,7 +48,7 @@
               </button>
             </a>
         </td>
-        <td><a href={% url "edit_task" task.id %}><button type="button" class="btn btn-outline-primary">Edit</a></button></td>
+        <td><a href={% url "edit_task" task.id %}><button type="button" class="btn btn-outline-primary">Edit</button></a></td>
         <td><a href={% url "delete_task" task.id %}?page={{all_tasks.number}}><button type="button" class="btn btn-outline-danger">Delete</button></a></td>
     </tr>
     {% endfor %}
