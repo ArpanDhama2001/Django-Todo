@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import CustomRegisterationForm
 from django.contrib import messages
+from django.contrib.auth import logout
 
 # Create your views here.
 def register(request):
@@ -15,3 +16,8 @@ def register(request):
         register_form = CustomRegisterationForm()
     
     return render(request, "register.html", {"register_form": register_form})
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "User Logged out Successfully!")
+    return redirect('login')
