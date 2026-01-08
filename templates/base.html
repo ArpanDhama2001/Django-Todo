@@ -28,6 +28,11 @@
             </li>
         </ul>
     </div>
+    {% if user.is_authenticated %}
+        <div class="d-flex gap-4 align-items-center">
+        <div class="text-white text-capitalize">{{user.username}}</div>
+        <a href='{% url "logout" %}' class="btn btn-outline-success">Logout</a>
+    {% endif %}
     </div>
     </nav>
 
