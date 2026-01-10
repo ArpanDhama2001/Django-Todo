@@ -12,13 +12,14 @@ def homepage(request):
         form = TaskForm(request.POST or None)
         if form.is_valid():
             task = form.save(commit=False)
+            task.author = request.user
             task.save()
             messages.success(request, "Task added successfully!")
             return redirect("homepage")
         else:
             form = TaskForm()
 
-    all_tasks = Task.objects.all()
+    all_tasks = Task.objects.filter(author=request.user)
     paginator = Paginator(all_tasks, 5)
     page = request.GET.get('page')
     all_tasks = paginator.get_page(page)
@@ -38,6 +39,9 @@ def todo_details_page(request, todo_id):
 def delete_task(request, task_id):
     task = Task.objects.get(id = task_id)
     if task:
+        if task.author != request.user:
+            messages.error(request, "Unauthorized access denied!")
+            return redirect(f"homepage")
         task.delete()
         messages.success(request, f"Task - {task.task} deleted!")
         page = request.GET.get('page', '1')
@@ -49,6 +53,9 @@ def edit_task(request, task_id):
     if request.method == "POST":
         form = TaskForm(request.POST or None, instance=task)
         if form.is_valid():
+            if task.author != request.user:
+                messages.error(request, "Unauthorized access denied!")
+                return redirect(f"homepage")
             task = form.save(commit=False)
             task.save()
             messages.success(request, "Task added successfully!")
@@ -58,6 +65,9 @@ def edit_task(request, task_id):
 
 def mark_incomplete(request, task_id):
     task = Task.objects.get(id = task_id)
+    if task.author != request.user:
+        messages.error(request, "Unauthorized access denied!")
+        return redirect(f"homepage")
     task.isCompleted = False
     messages.success(request, "Task marked incomplete!")
     task.save()
@@ -66,6 +76,9 @@ def mark_incomplete(request, task_id):
 
 def mark_complete(request, task_id):
     task = Task.objects.get(id = task_id)
+    if task.author != request.user:
+        messages.error(request, "Unauthorized access denied!")
+        return redirect(f"homepage")
     task.isCompleted = True
     messages.success(request, "Task marked complete!")
     task.save()
